@@ -8,8 +8,16 @@ public class MyAtm {
     private static final int account = 10;
 
     public static void withdrawMoney(int amount) throws InterruptedException {
-        Thread.sleep(2000l); //processing going on here
         System.out.println(String.format("[Application] Successful Withdrawal of [{%s}] units!", amount));
+    }
+
+    public static void main(String[] args) {
+        try {
+            System.out.println("111111");
+            withdrawMoney(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
