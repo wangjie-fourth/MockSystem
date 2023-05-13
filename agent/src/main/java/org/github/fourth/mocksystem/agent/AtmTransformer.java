@@ -49,7 +49,7 @@ public class AtmTransformer implements ClassFileTransformer {
                 endBlock.append("endTime = System.currentTimeMillis();");
                 endBlock.append("opTime = (endTime-startTime)/1000;");
 
-                endBlock.append("System.out.println(\"[Application] Withdrawal operation completed in:" +
+                endBlock.append("System.out.println(\"[wangjie] Withdrawal operation completed in:" +
                                 "\" + opTime + \" seconds!\");");
 
                 m.insertAfter(endBlock.toString());
