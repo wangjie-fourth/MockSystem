@@ -1,8 +1,10 @@
 package org.github.fourth.mocksystem.agent;
 
-import javassist.*;
 
-import java.io.IOException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
@@ -54,8 +56,8 @@ public class AtmTransformer implements ClassFileTransformer {
 
                 byteCode = cc.toBytecode();
                 cc.detach();
-            } catch (NotFoundException | CannotCompileException | IOException e) {
-                MockSystemAgent.LOGGER.error("Exception" + e.toString());
+            } catch (Exception e) {
+                MockSystemAgent.LOGGER.error("Exception" + e);
             }
         }
         return byteCode;
