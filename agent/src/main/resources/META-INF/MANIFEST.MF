@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Premain-Class: org.github.fourth.mocksystem.agent.MockSystemAgent
-Agent-Class: org.github.fourth.mocksystem.agent.MockSystemAgent
-Can-Redefine-Classes: true
-Can-Retransform-Classes: true

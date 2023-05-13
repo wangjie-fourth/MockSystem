@@ -34,8 +34,8 @@ public class AtmTransformer implements ClassFileTransformer {
 
         if (className.equals(finalTargetClassName) && loader.equals(targetClassLoader)) {
 
-            MockSystemAgent.LOGGER.info("[Agent] Transforming class MyAtm");
             try {
+                MockSystemAgent.LOGGER.info("[Agent] Transforming class MyAtm");
                 ClassPool cp = ClassPool.getDefault();
                 CtClass cc = cp.get(targetClassName);
                 CtMethod m = cc.getDeclaredMethod(WITHDRAW_MONEY_METHOD);
@@ -49,14 +49,14 @@ public class AtmTransformer implements ClassFileTransformer {
                 endBlock.append("endTime = System.currentTimeMillis();");
                 endBlock.append("opTime = (endTime-startTime)/1000;");
 
-                endBlock.append("LOGGER.info(\"[Application] Withdrawal operation completed in:" +
+                endBlock.append("System.out.println(\"[Application] Withdrawal operation completed in:" +
                                 "\" + opTime + \" seconds!\");");
 
                 m.insertAfter(endBlock.toString());
 
                 byteCode = cc.toBytecode();
                 cc.detach();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 MockSystemAgent.LOGGER.error("Exception" + e);
             }
         }
