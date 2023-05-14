@@ -14,9 +14,9 @@ import java.security.ProtectionDomain;
 public class AtmTransformer implements ClassFileTransformer {
 
     /** The internal form class name of the class to transform */
-    private String targetClassName;
+    private final String targetClassName;
     /** The class loader of the class we want to transform */
-    private ClassLoader targetClassLoader;
+    private final ClassLoader targetClassLoader;
     private static final String WITHDRAW_MONEY_METHOD = "withdrawMoney";
 
     public AtmTransformer(String targetClassName, ClassLoader targetClassLoader) {

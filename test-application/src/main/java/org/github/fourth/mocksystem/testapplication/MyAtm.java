@@ -5,19 +5,18 @@ package org.github.fourth.mocksystem.testapplication;
  */
 public class MyAtm {
 
-    private static final int account = 10;
-
     public static void withdrawMoney(int amount) throws InterruptedException {
-        System.out.println(String.format("[Application] Successful Withdrawal of [{%s}] units!", amount));
+        Thread.sleep(1000);
+        System.out.printf("[Application] Successful Withdrawal of [{%s}] units!%n", amount);
     }
 
     public static void main(String[] args) {
         try {
-            System.out.println("111111");
             withdrawMoney(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.exit(0);
     }
 
 }
