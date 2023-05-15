@@ -12,6 +12,7 @@
         <module>agent</module>
         <module>test-application</module>
         <module>integration-test</module>
+        <module>attacher</module>
     </modules>
 
     <properties>
