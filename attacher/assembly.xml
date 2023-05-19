@@ -9,10 +9,15 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>
-            <excludes>
-                <exclude>org.apache.commons:commons-lang3</exclude>
-                <exclude>org.apache.logging.log4j:log4j-1.2-api</exclude>
-            </excludes>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <unpack>true</unpack>
+            <scope>system</scope>
         </dependencySet>
     </dependencySets>
 
