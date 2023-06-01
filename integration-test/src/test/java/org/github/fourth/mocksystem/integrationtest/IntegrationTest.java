@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
 @DisplayName("模拟测试")
 public class IntegrationTest {
+    public static boolean isWindows() {
+        return System.getProperties().getProperty("os.name").toUpperCase().contains("WINDOWS");
+    }
 
     private boolean isLocalMachine() {
         ProcessBuilder processBuilder = new ProcessBuilder();
@@ -42,42 +44,48 @@ public class IntegrationTest {
         }
     }
 
+    private String runCommandAndGetOOut() throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (isWindows()) {
+            processBuilder.command("cmd", "/c", " java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+        } else if (isLocalMachine()) {
+            processBuilder.command("bash", "-c", "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+        } else {
+            processBuilder.command("bash", "-c"," java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+        }
+
+        Process process = processBuilder.start();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader error = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+        StringBuilder output = new StringBuilder();
+        StringBuilder errorOutput = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            output.append(line).append("\n");
+        }
+        String errorLine;
+        while ((errorLine = error.readLine()) != null) {
+            errorOutput.append(errorLine).append("\n");
+        }
+
+        int exitCode = process.waitFor();
+        System.out.println("Process terminated with " + exitCode);
+        if (exitCode == 0) {
+            System.out.println(output);
+        } else {
+            System.err.println(errorOutput);
+        }
+
+        return output.toString();
+
+    }
+
     @Test
     @DisplayName("模拟测试")
-    public void mockCase() {
-        System.out.println("test");
-        if (!isLocalMachine()) {
-            return;
-        }
-
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("bash", "-c", "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java -javaagent:../agent/target/agent-1.0.jar -jar ../test-application/target/test-application-1.0-jar-with-dependencies.jar");
-        try {
-
-            Process process = processBuilder.start();
-
-            StringBuilder output = new StringBuilder();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-
-            int exitVal = process.waitFor();
-            if (exitVal == 0) {
-                System.out.println("Success!");
-                System.out.println(output);
-                Assertions.assertTrue(output.toString().contains("[wangjie] Withdrawal operation completed in:"));
-                System.exit(0);
-            } else {
-                Assertions.fail("command line exec fail!");
-            }
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-            Assertions.fail("error occur");
-        }
+    public void mockCase() throws IOException, InterruptedException {
+        String outPut = runCommandAndGetOOut();
+        Assertions.assertTrue(outPut.contains("[wangjie] Withdrawal operation completed in:"));
     }
 }

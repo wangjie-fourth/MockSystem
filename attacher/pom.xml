@@ -8,28 +8,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>attacher</artifactId>
+    <artifactId>mocksystem-attacher</artifactId>
     <packaging>jar</packaging>
-
-    <name>attacher</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>my-local-repo</id>
-            <url>file://${project.basedir}\my-repo\</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
-            <version>${java.version}</version>
+            <version>1.8.1</version>
             <scope>system</scope>
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
