@@ -1,10 +1,12 @@
 package org.github.fourth.mocksystem.integrationtest;
 
+import com.sun.tools.attach.VirtualMachine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.lang.reflect.Field;
 
 @DisplayName("模拟测试")
 public class IntegrationTest {
@@ -16,9 +18,67 @@ public class IntegrationTest {
     private static final String LOCAL_JAVA_COMMAND_LOCATION = "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java";
 
     @Test
-    @DisplayName("静态启动测试")
-    public void mockCase() throws IOException, InterruptedException {
-        Assertions.assertTrue(runCommandAndGetOutPut().contains("[wangjie] Withdrawal operation completed in:"));
+    @DisplayName("启动时加载测试")
+    public void startLoadingTest() throws IOException, InterruptedException {
+        String command;
+        if (isWindows()) {
+            command = String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION);
+        } else if (isLocalMachine() && isMac()) {
+            command = String.format("%s -javaagent:%s  -jar %s", LOCAL_JAVA_COMMAND_LOCATION, AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION);
+        } else {
+            command = String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION);
+        }
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(computeShebang(), executeTheStringAsCommand(), command);
+
+        Assertions.assertTrue(new ProcessUtils(processBuilder).getLog().contains("[wangjie] Withdrawal operation completed in:"));
+    }
+
+//    @Test
+//    @DisplayName("运行时加载测试")
+    public void runtimeLoadingTest() throws IOException, InterruptedException {
+        String command;
+        if (isLocalMachine() && isMac()) {
+            command = String.format("%s -jar %s", LOCAL_JAVA_COMMAND_LOCATION, TEST_APPLICATION_LOCATION);
+        } else {
+            command = String.format(" java -jar  %s", TEST_APPLICATION_LOCATION);
+        }
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(computeShebang(), executeTheStringAsCommand(), command);
+
+        ProcessUtils processUtils = new ProcessUtils(processBuilder);
+
+        String pid = String.valueOf(getPid(processUtils.getProcess()));
+        System.out.println(pid);
+        try {
+            VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+            virtualMachine.loadAgent(AGENT_JAR_LOCATION);
+            virtualMachine.detach();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+        }
+        Thread.sleep(10000);
+    }
+
+    public static int getPid(Process process) {
+        try {
+            Class<?> cProcessImpl = process.getClass();
+            Field fPid = cProcessImpl.getDeclaredField("pid");
+            if (!fPid.isAccessible()) {
+                fPid.setAccessible(true);
+            }
+            return fPid.getInt(process);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private static String executeTheStringAsCommand() {
+        return isWindows() ? "/c" : "-c";
+    }
+
+    private static String computeShebang() {
+        return isWindows() ? "cmd" : "bash";
     }
 
     private static boolean isWindows() {
@@ -39,18 +99,5 @@ public class IntegrationTest {
             Assertions.fail("error occur");
             return false;
         }
-    }
-
-    private static String runCommandAndGetOutPut() throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (isWindows()) {
-            processBuilder.command("cmd", "/c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
-        } else if (isLocalMachine() && isMac()) {
-            processBuilder.command("bash", "-c", String.format("%s -javaagent:%s  -jar %s", LOCAL_JAVA_COMMAND_LOCATION, AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
-        } else {
-            processBuilder.command("bash", "-c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
-        }
-
-        return new ProcessUtils(processBuilder).getLog();
     }
 }

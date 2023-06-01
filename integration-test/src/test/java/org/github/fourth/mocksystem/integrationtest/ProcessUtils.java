@@ -29,6 +29,10 @@ public class ProcessUtils {
         System.err.println(errorLog);
     }
 
+    public Process getProcess() {
+        return process;
+    }
+
     public int getExitCode() throws InterruptedException {
         return process.waitFor();
     }
