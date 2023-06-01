@@ -21,48 +21,22 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>aliyunMavenMirror</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>alimaven</id>
-                    <name>aliyun maven</name>
-                    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-                </pluginRepository>
-            </pluginRepositories>
-            <repositories>
-                <repository>
-                    <id>my-local-repo</id>
-                    <url>file://${project.basedir}\attacher\my-repo\</url>
-                </repository>
-                <repository>
-                    <id>alimaven</id>
-                    <name>aliyun maven</name>
-                    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-                </repository>
-            </repositories>
-        </profile>
-    </profiles>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.github.fourth</groupId>
-                <artifactId>agent</artifactId>
-                <version>1.0</version>
+                <artifactId>mocksystem-agent</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.github.fourth</groupId>
-                <artifactId>test-application</artifactId>
-                <version>1.0</version>
+                <artifactId>mocksystem-test-application</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.github.fourth</groupId>
-                <artifactId>integration-test</artifactId>
-                <version>1.0</version>
+                <artifactId>mocksystem-integration-test</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>

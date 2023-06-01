@@ -8,11 +8,22 @@ import java.io.*;
 
 @DisplayName("模拟测试")
 public class IntegrationTest {
-    public static boolean isWindows() {
+
+    private static final String AGENT_JAR_LOCATION = "../agent/target/mocksystem-agent-1.0.0.jar";
+
+    private static final String TEST_APPLICATION_LOCATION = "../test-application/target/mocksystem-test-application-1.0.0-jar-with-dependencies.jar";
+
+    @Test
+    @DisplayName("静态启动测试")
+    public void mockCase() throws IOException, InterruptedException {
+        Assertions.assertTrue(runCommandAndGetOutPut().contains("[wangjie] Withdrawal operation completed in:"));
+    }
+
+    private static boolean isWindows() {
         return System.getProperties().getProperty("os.name").toUpperCase().contains("WINDOWS");
     }
 
-    private boolean isLocalMachine() {
+    private static boolean isLocalMachine() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", " pwd ");
         try {
@@ -44,14 +55,14 @@ public class IntegrationTest {
         }
     }
 
-    private String runCommandAndGetOOut() throws IOException, InterruptedException {
+    private static String runCommandAndGetOutPut() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (isWindows()) {
-            processBuilder.command("cmd", "/c", " java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+            processBuilder.command("cmd", "/c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
         } else if (isLocalMachine()) {
-            processBuilder.command("bash", "-c", "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+            processBuilder.command("bash", "-c", String.format("/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java -javaagent:%s  -jar %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
         } else {
-            processBuilder.command("bash", "-c"," java -javaagent:../agent/target/mocksystem-agent-1.0.jar -jar ../test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar");
+            processBuilder.command("bash", "-c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
         }
 
         Process process = processBuilder.start();
@@ -79,13 +90,5 @@ public class IntegrationTest {
         }
 
         return output.toString();
-
-    }
-
-    @Test
-    @DisplayName("模拟测试")
-    public void mockCase() throws IOException, InterruptedException {
-        String outPut = runCommandAndGetOOut();
-        Assertions.assertTrue(outPut.contains("[wangjie] Withdrawal operation completed in:"));
     }
 }

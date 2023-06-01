@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>org.github.fourth</groupId>
-            <artifactId>test-application</artifactId>
+            <artifactId>mocksystem-test-application</artifactId>
         </dependency>
     </dependencies>
 
