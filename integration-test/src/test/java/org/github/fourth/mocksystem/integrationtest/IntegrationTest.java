@@ -13,6 +13,8 @@ public class IntegrationTest {
 
     private static final String TEST_APPLICATION_LOCATION = "../test-application/target/mocksystem-test-application-1.0.0-jar-with-dependencies.jar";
 
+    private static final String LOCAL_JAVA_COMMAND_LOCATION = "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java";
+
     @Test
     @DisplayName("静态启动测试")
     public void mockCase() throws IOException, InterruptedException {
@@ -23,31 +25,15 @@ public class IntegrationTest {
         return System.getProperties().getProperty("os.name").toUpperCase().contains("WINDOWS");
     }
 
+    private static boolean isMac() {
+        return System.getProperties().getProperty("os.name").toUpperCase().contains("MAC");
+    }
+
     private static boolean isLocalMachine() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", " pwd ");
         try {
-
-            Process process = processBuilder.start();
-
-            StringBuilder output = new StringBuilder();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-
-            int exitVal = process.waitFor();
-            if (exitVal == 0) {
-                System.out.println(output);
-                return output.toString().contains("wangjie_fourth");
-            } else {
-                Assertions.fail("command line exec fail!");
-                return false;
-            }
-
+            return new ProcessUtils(processBuilder).getLog().contains("wangjie_fourth");
         } catch (Throwable e) {
             e.printStackTrace();
             Assertions.fail("error occur");
@@ -59,36 +45,12 @@ public class IntegrationTest {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (isWindows()) {
             processBuilder.command("cmd", "/c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
-        } else if (isLocalMachine()) {
-            processBuilder.command("bash", "-c", String.format("/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/bin/java -javaagent:%s  -jar %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
+        } else if (isLocalMachine() && isMac()) {
+            processBuilder.command("bash", "-c", String.format("%s -javaagent:%s  -jar %s", LOCAL_JAVA_COMMAND_LOCATION, AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
         } else {
             processBuilder.command("bash", "-c", String.format(" java -javaagent:%s  -jar  %s", AGENT_JAR_LOCATION, TEST_APPLICATION_LOCATION));
         }
 
-        Process process = processBuilder.start();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        BufferedReader error = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-        StringBuilder output = new StringBuilder();
-        StringBuilder errorOutput = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.append(line).append("\n");
-        }
-        String errorLine;
-        while ((errorLine = error.readLine()) != null) {
-            errorOutput.append(errorLine).append("\n");
-        }
-
-        int exitCode = process.waitFor();
-        System.out.println("Process terminated with " + exitCode);
-        if (exitCode == 0) {
-            System.out.println(output);
-        } else {
-            System.err.println(errorOutput);
-        }
-
-        return output.toString();
+        return new ProcessUtils(processBuilder).getLog();
     }
 }
