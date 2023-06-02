@@ -44,6 +44,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
                 <version>3.1.0</version>
+                <configuration>
+                    <argLine>-XX:+StartAttachListener</argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>

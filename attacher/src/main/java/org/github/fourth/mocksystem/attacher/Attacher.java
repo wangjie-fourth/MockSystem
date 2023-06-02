@@ -30,18 +30,4 @@ public class Attacher {
             ex.printStackTrace();
         }
     }
-
-    private static class LocalDemo {
-        public static void main(String[] args) {
-            String pid = "19384";
-            String agentPathAndOptions = "D:\\project\\myself\\MockSystem\\agent\\target\\agent-1.0.jar";
-            try {
-                VirtualMachine virtualMachine = VirtualMachine.attach(pid);
-                virtualMachine.loadAgent(agentPathAndOptions);
-                virtualMachine.detach();
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 }

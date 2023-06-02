@@ -1,5 +1,8 @@
 package org.github.fourth.mocksystem.integrationtest;
 
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.WinNT;
 import com.sun.tools.attach.VirtualMachine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,11 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 @DisplayName("模拟测试")
 public class IntegrationTest {
 
-    private static final String AGENT_JAR_LOCATION = "../agent/target/mocksystem-agent-1.0.0.jar";
+    public static final String AGENT_JAR_LOCATION = "../agent/target/mocksystem-agent-1.0.0.jar";
 
     private static final String TEST_APPLICATION_LOCATION = "../test-application/target/mocksystem-test-application-1.0.0-jar-with-dependencies.jar";
 
@@ -35,10 +39,10 @@ public class IntegrationTest {
     }
 
 //    @Test
-//    @DisplayName("运行时加载测试")
+    @DisplayName("运行时加载测试")
     public void runtimeLoadingTest() throws IOException, InterruptedException {
         String command;
-        if (isLocalMachine() && isMac()) {
+        if (isMac() && isLocalMachine()) {
             command = String.format("%s -jar %s", LOCAL_JAVA_COMMAND_LOCATION, TEST_APPLICATION_LOCATION);
         } else {
             command = String.format(" java -jar  %s", TEST_APPLICATION_LOCATION);
@@ -46,31 +50,47 @@ public class IntegrationTest {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(computeShebang(), executeTheStringAsCommand(), command);
 
-        ProcessUtils processUtils = new ProcessUtils(processBuilder);
+        // todo: 似乎只能通过执行shell脚本来完成
+//        ProcessUtils processUtils = new ProcessUtils(processBuilder);
+//        String pid = String.valueOf(getProcessID(process));
+//        System.out.println(pid);
+//        try {
+//            VirtualMachine virtualMachine = VirtualMachine.attach(pid);
+//            virtualMachine.loadAgent(AGENT_JAR_LOCATION);
+//            virtualMachine.detach();
+//        } catch (Throwable ex) {
+//            ex.printStackTrace();
+//        }
 
-        String pid = String.valueOf(getPid(processUtils.getProcess()));
-        System.out.println(pid);
-        try {
-            VirtualMachine virtualMachine = VirtualMachine.attach(pid);
-            virtualMachine.loadAgent(AGENT_JAR_LOCATION);
-            virtualMachine.detach();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
-        Thread.sleep(10000);
+//        Thread.sleep(10000);
     }
 
-    public static int getPid(Process process) {
+    public static long getProcessID(Process p) {
+        long result = -1;
         try {
-            Class<?> cProcessImpl = process.getClass();
-            Field fPid = cProcessImpl.getDeclaredField("pid");
-            if (!fPid.isAccessible()) {
-                fPid.setAccessible(true);
+            //for windows
+            if (p.getClass().getName().equals("java.lang.Win32Process") ||
+                    p.getClass().getName().equals("java.lang.ProcessImpl")) {
+                Field f = p.getClass().getDeclaredField("handle");
+                f.setAccessible(true);
+                long handl = f.getLong(p);
+                Kernel32 kernel = Kernel32.INSTANCE;
+                WinNT.HANDLE hand = new WinNT.HANDLE();
+                hand.setPointer(Pointer.createConstant(handl));
+                result = kernel.GetProcessId(hand);
+                f.setAccessible(false);
             }
-            return fPid.getInt(process);
-        } catch (Exception e) {
-            return -1;
+            //for unix based operating systems
+            else if (p.getClass().getName().equals("java.lang.UNIXProcess")) {
+                Field f = p.getClass().getDeclaredField("pid");
+                f.setAccessible(true);
+                result = f.getLong(p);
+                f.setAccessible(false);
+            }
+        } catch (Exception ex) {
+            result = -1;
         }
+        return result;
     }
 
     private static String executeTheStringAsCommand() {
