@@ -18,15 +18,6 @@ public class ProcessUtils {
 
     public ProcessUtils(ProcessBuilder processBuilder) throws IOException {
         this.process = processBuilder.start();
-        String pid = String.valueOf(getProcessID(process));
-        System.out.println(pid);
-        try {
-            VirtualMachine virtualMachine = VirtualMachine.attach(pid);
-            virtualMachine.loadAgent(AGENT_JAR_LOCATION);
-            virtualMachine.detach();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-        }
         BufferedReader outReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         StringBuilder output = new StringBuilder();
