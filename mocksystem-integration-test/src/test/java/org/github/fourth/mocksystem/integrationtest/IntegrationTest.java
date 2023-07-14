@@ -4,6 +4,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
 import org.github.fourth.mocksystem.testapplication.testcase.AddBeforeAfterCodeCase;
+import org.github.fourth.mocksystem.testapplication.testcase.MockMethodResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,12 @@ public class IntegrationTest {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(computeShebang(), executeTheStringAsCommand(), command);
 
-        Assertions.assertTrue(new ProcessUtils(processBuilder).getLog().contains(AddBeforeAfterCodeCase.addLogPrint));
+        String actResultLog = new ProcessUtils(processBuilder).getLog();
+        // 判断插入代码执行成功
+        Assertions.assertTrue(actResultLog.contains(AddBeforeAfterCodeCase.addLogPrint));
+
+        // 判断mock返回类型是字符串
+        Assertions.assertTrue(actResultLog.contains(MockMethodResponse.mockResponseDataStr));
     }
 
 //    @Test

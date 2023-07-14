@@ -9,7 +9,6 @@ public class AddBeforeAfterCodeCase {
 
     public static final String addLogPrint = "[wangjie] Withdrawal operation completed in:";
     public static void testAddBeforeAfterCode(int amount) throws InterruptedException {
-        Thread.sleep(5000);
         System.out.printf("[Application] Successful Withdrawal of [{%s}] units!%n", amount);
     }
 

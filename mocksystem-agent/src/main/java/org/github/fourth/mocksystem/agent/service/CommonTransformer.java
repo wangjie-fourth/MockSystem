@@ -35,10 +35,11 @@ public class CommonTransformer implements ClassFileTransformer {
             return byteCode;
         }
 
+        LOGGER.info(String.format("[Agent] Transforming class :%s", classModifyInfo.getFullClassName()));
         // 依次转换方法
         for (MethodModifyInfo methodModifyInfo : classModifyInfo.getMethodNameList()) {
             try {
-                LOGGER.info(String.format("[Agent] Transforming class :%s", classModifyInfo.getFullClassName()));
+                LOGGER.info(String.format("[Agent] Transforming method :%s", methodModifyInfo.getMethodName()));
                 // todo: 如何把这个插入变量也能变成配置化？？？
                 ClassPool cp = ClassPool.getDefault();
                 CtClass cc = cp.get(classModifyInfo.getFullClassName());
@@ -53,6 +54,12 @@ public class CommonTransformer implements ClassFileTransformer {
                 if (StringUtils.isNotEmpty(methodModifyInfo.getRunAfterCode())) {
                     m.insertAfter(methodModifyInfo.getRunAfterCode());
                 }
+
+                // mock 方法的返回值
+                if (StringUtils.isNotEmpty(methodModifyInfo.getMockResponseDataStr())) {
+                    m.setBody(String.format("return \"%s\";", methodModifyInfo.getMockResponseDataStr()));
+                }
+
                 byteCode = cc.toBytecode();
                 cc.detach();
             } catch (Throwable e) {

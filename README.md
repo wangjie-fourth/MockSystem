@@ -1,8 +1,8 @@
 
 使用javaAgent，动态的Mock某些方法的方法。
 ```shell
-java -javaagent:./agent/target/agent-1.0.jar -jar ./test-application/target/test-application-1.0-jar-with-dependencies.jar
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5055 -javaagent:./agent/target/agent-1.0.jar -jar ./test-application/target/test-application-1.0-jar-with-dependencies.jar
+java -javaagent:./mocksystem-agent/target/mocksystem-agent-1.0.jar -jar ./mocksystem-test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5055 -javaagent:./mocksystem-agent/target/mocksystem-agent-1.0.0.jar -jar ./mocksystem-test-application/target/mocksystem-test-application-1.0.0-jar-with-dependencies.jar
 ```
 
 一些思路：
@@ -13,8 +13,6 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5055 -javaage
 本地修改mock信息后，触发新版本的agent打包，将修改的信息包含进去，并生成新agent的jar包。
 然后目标机器来重新加载这个运行的agent包。
 
-2、不同classLoader的class是不一样的？
-大概率不会出现这种问题，先忽略这种。
 
 
 未完事项：
