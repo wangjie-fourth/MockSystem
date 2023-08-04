@@ -11,7 +11,7 @@ import org.github.fourth.mocksystem.agent.util.LOGGER;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
-import static org.github.fourth.mocksystem.agent.service.MockDataService.NeedReTransformClassNameList;
+import static org.github.fourth.mocksystem.agent.service.MockDataService.needReTransformClassNameList;
 
 public class CommonTransformer implements ClassFileTransformer {
 
@@ -26,7 +26,7 @@ public class CommonTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         byte[] byteCode = classfileBuffer;
         // 判断这个class需要不需要转换
-        ClassModifyInfo classModifyInfo = NeedReTransformClassNameList.stream().filter(x -> className.equals(x.getFullClassName().replaceAll("\\.", "/"))).findFirst().orElse(null);
+        ClassModifyInfo classModifyInfo = needReTransformClassNameList.stream().filter(x -> className.equals(x.getFullClassName().replaceAll("\\.", "/"))).findFirst().orElse(null);
         if (classModifyInfo == null) {
             return byteCode;
         }

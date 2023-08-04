@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockDataService {
-    public static List<ClassModifyInfo> NeedReTransformClassNameList = new ArrayList<>();
+    public static List<ClassModifyInfo> needReTransformClassNameList = new ArrayList<>();
 
     static {
         ClassModifyInfo classModifyInfo = new ClassModifyInfo();
@@ -17,10 +17,10 @@ public class MockDataService {
         classModifyInfo.setMethodNameList(new ArrayList<>());
         MethodModifyInfo methodModifyInfo = new MethodModifyInfo();
         methodModifyInfo.setMethodName(AddBeforeAfterCodeCase.class.getMethods()[0].getName());
-        methodModifyInfo.setRunBeforeCode(AddBeforeAfterCodeCase.beforeCode);
-        methodModifyInfo.setRunAfterCode(AddBeforeAfterCodeCase.afterCode);
+        methodModifyInfo.setRunBeforeCode(AddBeforeAfterCodeCase.BEFORE_CODE);
+        methodModifyInfo.setRunAfterCode(AddBeforeAfterCodeCase.AFTER_CODE);
         classModifyInfo.getMethodNameList().add(methodModifyInfo);
-        NeedReTransformClassNameList.add(classModifyInfo);
+        needReTransformClassNameList.add(classModifyInfo);
     }
 
     static {
@@ -31,9 +31,9 @@ public class MockDataService {
         methodModifyInfo.setMethodName(MockMethodResponse.class.getMethods()[0].getName());
         methodModifyInfo.setRunBeforeCode(null);
         methodModifyInfo.setRunAfterCode(null);
-        methodModifyInfo.setMockResponseDataStr(MockMethodResponse.mockResponseDataStr);
+        methodModifyInfo.setMockResponseDataStr(MockMethodResponse.MOCK_RESPONSE_DATA_STR);
         classModifyInfo.getMethodNameList().add(methodModifyInfo);
-        NeedReTransformClassNameList.add(classModifyInfo);
+        needReTransformClassNameList.add(classModifyInfo);
     }
 
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 @DisplayName("模拟测试")
@@ -37,10 +37,10 @@ public class IntegrationTest {
 
         String actResultLog = new ProcessUtils(processBuilder).getLog();
         // 判断插入代码执行成功
-        Assertions.assertTrue(actResultLog.contains(AddBeforeAfterCodeCase.addLogPrint));
+        Assertions.assertTrue(actResultLog.contains(AddBeforeAfterCodeCase.ADD_LOG_PRINT));
 
         // 判断mock返回类型是字符串
-        Assertions.assertTrue(actResultLog.contains(MockMethodResponse.mockResponseDataStr));
+        Assertions.assertTrue(actResultLog.contains(MockMethodResponse.MOCK_RESPONSE_DATA_STR));
     }
 
 //    @Test

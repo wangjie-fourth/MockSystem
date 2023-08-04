@@ -30,3 +30,7 @@ mvn install:install-file -Dfile=D:/software/java/jdk8u322-b06/lib/tools.jar
 2、运行时加载javaagent的测试
 
 3、test-appliction需要配置化的运行时间
+
+4、看mockito是如何实现自动mock的
+普通方法: mockito是通过生成子类做代理解决的
+powerMock: 通过修改字节码的方式实现的.类是由一个新的ClassLoad加载的

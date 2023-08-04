@@ -1,14 +1,8 @@
 package org.github.fourth.mocksystem.integrationtest;
 
-import com.sun.tools.attach.VirtualMachine;
-import org.omg.SendingContext.RunTime;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import static org.github.fourth.mocksystem.integrationtest.IntegrationTest.AGENT_JAR_LOCATION;
-import static org.github.fourth.mocksystem.integrationtest.IntegrationTest.getProcessID;
 
 public class ProcessUtils {
 
