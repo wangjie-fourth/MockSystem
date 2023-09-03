@@ -20,5 +20,7 @@ jobs:
           mvn clean && mvn verify
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+        with:
+          root_dir: /home/runner/work/MockSystem/MockSystem/mocksystem-integration-test
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
