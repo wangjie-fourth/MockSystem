@@ -25,7 +25,7 @@ public class MockSystemAgent {
     private static void transformClass(Instrumentation instrumentation) {
         Class<?> targetCls;
         ClassLoader targetClassLoader;
-        for (ClassModifyInfo classModifyInfo : MockDataService.needReTransformClassNameList) {
+        for (ClassModifyInfo classModifyInfo : MockDataService.NEED_RE_TRANSFORM_CLASS_NAME_LIST) {
             String className = classModifyInfo.getFullClassName();
             // see if we can get the class using forName
             try {

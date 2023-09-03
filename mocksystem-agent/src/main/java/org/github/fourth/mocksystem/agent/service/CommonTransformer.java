@@ -1,5 +1,6 @@
 package org.github.fourth.mocksystem.agent.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -11,8 +12,9 @@ import org.github.fourth.mocksystem.agent.util.LOGGER;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
-import static org.github.fourth.mocksystem.agent.service.MockDataService.needReTransformClassNameList;
+import static org.github.fourth.mocksystem.agent.service.MockDataService.NEED_RE_TRANSFORM_CLASS_NAME_LIST;
 
+@SuppressFBWarnings({"EI_EXPOSE_REP"})
 public class CommonTransformer implements ClassFileTransformer {
 
     /** The class loader of the class we want to transform */
@@ -26,7 +28,7 @@ public class CommonTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         byte[] byteCode = classfileBuffer;
         // 判断这个class需要不需要转换
-        ClassModifyInfo classModifyInfo = needReTransformClassNameList.stream().filter(x -> className.equals(x.getFullClassName().replaceAll("\\.", "/"))).findFirst().orElse(null);
+        ClassModifyInfo classModifyInfo = NEED_RE_TRANSFORM_CLASS_NAME_LIST.stream().filter(x -> className.equals(x.getFullClassName().replaceAll("\\.", "/"))).findFirst().orElse(null);
         if (classModifyInfo == null) {
             return byteCode;
         }

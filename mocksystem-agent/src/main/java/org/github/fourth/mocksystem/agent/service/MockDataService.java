@@ -1,5 +1,6 @@
 package org.github.fourth.mocksystem.agent.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.github.fourth.mocksystem.agent.entity.ClassModifyInfo;
 import org.github.fourth.mocksystem.agent.entity.MethodModifyInfo;
 import org.github.fourth.mocksystem.testapplication.testcase.AddBeforeAfterCodeCase;
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockDataService {
-    public static List<ClassModifyInfo> needReTransformClassNameList = new ArrayList<>();
+
+    @SuppressFBWarnings("MS_MUTABLE_COLLECTION")
+    public static final List<ClassModifyInfo> NEED_RE_TRANSFORM_CLASS_NAME_LIST = new ArrayList<>();
 
     static {
         ClassModifyInfo classModifyInfo = new ClassModifyInfo();
@@ -20,7 +23,7 @@ public class MockDataService {
         methodModifyInfo.setRunBeforeCode(AddBeforeAfterCodeCase.BEFORE_CODE);
         methodModifyInfo.setRunAfterCode(AddBeforeAfterCodeCase.AFTER_CODE);
         classModifyInfo.getMethodNameList().add(methodModifyInfo);
-        needReTransformClassNameList.add(classModifyInfo);
+        NEED_RE_TRANSFORM_CLASS_NAME_LIST.add(classModifyInfo);
     }
 
     static {
@@ -33,7 +36,7 @@ public class MockDataService {
         methodModifyInfo.setRunAfterCode(null);
         methodModifyInfo.setMockResponseDataStr(MockMethodResponse.MOCK_RESPONSE_DATA_STR);
         classModifyInfo.getMethodNameList().add(methodModifyInfo);
-        needReTransformClassNameList.add(classModifyInfo);
+        NEED_RE_TRANSFORM_CLASS_NAME_LIST.add(classModifyInfo);
     }
 
 
