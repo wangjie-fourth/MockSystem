@@ -1,4 +1,11 @@
+<a href="https://codecov.io/gh/wangjie-fourth/MockSystem/branch/main"><img src="https://img.shields.io/codecov/c/github/wangjie-fourth/MockSystem/main?logo=codecov&logoColor=white" alt="Coverage Status"></a>
+<a href="https://github.com/wangjie-fourth/MockSystem/actions/workflows/build_and_test.yaml">
+<img src="https://img.shields.io/github/actions/workflow/status/wangjie-fourth/MockSystem/build_and_test.yaml?branch=main&logo=github&logoColor=white&label=fast ci" alt="Github Workflow Build Status">
+</a>
+<a href="https://github.com/wangjie-fourth/MockSystem"><img src="https://img.shields.io/github/repo-size/wangjie-fourth/MockSystem" alt="GitHub repo size"></a>
 
+
+# MockSystem
 使用javaAgent，动态的Mock某些方法的方法。
 ```shell
 java -javaagent:./mocksystem-agent/target/mocksystem-agent-1.0.jar -jar ./mocksystem-test-application/target/mocksystem-test-application-1.0-jar-with-dependencies.jar
