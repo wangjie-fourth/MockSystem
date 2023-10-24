@@ -45,3 +45,7 @@ mvn install:install-file -Dfile=D:/software/java/jdk8u322-b06/lib/tools.jar
 4、看mockito是如何实现自动mock的
 普通方法: mockito是通过生成子类做代理解决的
 powerMock: 通过修改字节码的方式实现的.类是由一个新的ClassLoad加载的
+
+
+5、可以参考jmockit的实现方式
+修改本地字节码之后，启动一个agent来加载修改后的字节码文件
