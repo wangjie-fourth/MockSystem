@@ -45,6 +45,11 @@ public class IntegrationTest {
 
 //    @Test
     @DisplayName("运行时加载测试")
+    /*
+     * 1、启动一个测试的jvm
+     * 2、测试的jvm触发运行时加载
+     * 3、验证加载后的正确性
+     */
     public void runtimeLoadingTest() throws IOException, InterruptedException {
         String command;
         if (isMac() && isLocalMachine()) {
